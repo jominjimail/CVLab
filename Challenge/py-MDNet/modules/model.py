@@ -147,7 +147,6 @@ class BinaryLoss(nn.Module):
         loss = pos_loss.sum() + neg_loss.sum()
         return loss
 
-
 class Accuracy():
     def __call__(self, pos_score, neg_score):
         

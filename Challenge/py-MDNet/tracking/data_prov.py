@@ -9,6 +9,8 @@ from utils import *
 
 
 class RegionExtractor():
+    # RegionExtractor(image, samples, opts['img_size'], opts['padding'], opts['batch_test'])
+    #                                            107            ,   16           , 256
     def __init__(self, image, samples, crop_size, padding, batch_size, shuffle=False):
 
         self.image = np.asarray(image)

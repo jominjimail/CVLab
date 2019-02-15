@@ -3,6 +3,12 @@ from PIL import Image
 
 from utils import *
 
+'''
+gen_samples(SampleGenerator('uniform', image.size, 1, 2, 1.1), 
+                    target_bbox, opts['n_neg_init']//2, opts['overlap_neg_init']),
+gen_samples(SampleGenerator('whole', image.size, 0, 1.2, 1.1),
+                    target_bbox, opts['n_neg_init']//2, opts['overlap_neg_init'])])
+'''
 def gen_samples(generator, bbox, n, overlap_range=None, scale_range=None):
     
     if overlap_range is None and scale_range is None:
@@ -34,7 +40,7 @@ def gen_samples(generator, bbox, n, overlap_range=None, scale_range=None):
         
         return samples
 
-
+# SampleGenerator('gaussian', image.size, 0.1, 1.2)
 class SampleGenerator():
     def __init__(self, type, img_size, trans_f=1, scale_f=1, aspect_f=None, valid=False):
         self.type = type

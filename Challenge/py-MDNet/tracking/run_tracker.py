@@ -24,12 +24,15 @@ np.random.seed(123)
 torch.manual_seed(456)
 torch.cuda.manual_seed(789)
 
+# forward_samples(model, image, pos_examples)
 def forward_samples(model, image, samples, out_layer='conv3'):
     model.eval()
+
     extractor = RegionExtractor(image, samples, opts['img_size'], opts['padding'], opts['batch_test'])
+    #                                            107            ,   16           , 256
     for i, regions in enumerate(extractor):
         regions = Variable(regions)
-        if opts['use_gpu']:
+        if opts['use_gpu']: # True
             regions = regions.cuda()
         feat = model(regions, out_layer=out_layer)
         if i==0:
@@ -51,14 +54,16 @@ def set_optimizer(model, lr_base, lr_mult=opts['lr_mult'], momentum=opts['moment
     optimizer = optim.SGD(param_list, lr = lr, momentum=momentum, weight_decay=w_decay)
     return optimizer
 
-
+# train(model, criterion, init_optimizer, pos_feats, neg_feats, opts['maxiter_init'])
+#             , BinaryLoss() , 0.001   ,                         , 30
+# pos_feats = forward_samples(model, image, pos_examples)
 def train(model, criterion, optimizer, pos_feats, neg_feats, maxiter, in_layer='fc4'):
     model.train()
-    
-    batch_pos = opts['batch_pos']
-    batch_neg = opts['batch_neg']
-    batch_test = opts['batch_test']
-    batch_neg_cand = max(opts['batch_neg_cand'], batch_neg)
+
+    batch_pos = opts['batch_pos'] #32
+    batch_neg = opts['batch_neg'] #96
+    batch_test = opts['batch_test'] #256
+    batch_neg_cand = max(opts['batch_neg_cand'], batch_neg) #1024
 
     pos_idx = np.random.permutation(pos_feats.size(0))
     neg_idx = np.random.permutation(neg_feats.size(0))
@@ -69,28 +74,28 @@ def train(model, criterion, optimizer, pos_feats, neg_feats, maxiter, in_layer='
     pos_pointer = 0
     neg_pointer = 0
 
-    for iter in range(maxiter):
+    for iter in range(maxiter): # 30
 
         # select pos idx
-        pos_next = pos_pointer+batch_pos
-        pos_cur_idx = pos_idx[pos_pointer:pos_next]
+        pos_next = pos_pointer+batch_pos # 0 + 32 , 64 ...
+        pos_cur_idx = pos_idx[pos_pointer:pos_next] # 0 ~ 32
         pos_cur_idx = pos_feats.new(pos_cur_idx).long()
         pos_pointer = pos_next
 
         # select neg idx
-        neg_next = neg_pointer+batch_neg_cand
-        neg_cur_idx = neg_idx[neg_pointer:neg_next]
+        neg_next = neg_pointer+batch_neg_cand # 0 + 1024 ..
+        neg_cur_idx = neg_idx[neg_pointer:neg_next] # 0 ~ 1024
         neg_cur_idx = neg_feats.new(neg_cur_idx).long()
         neg_pointer = neg_next
 
         # create batch
-        batch_pos_feats = Variable(pos_feats.index_select(0, pos_cur_idx))
-        batch_neg_feats = Variable(neg_feats.index_select(0, neg_cur_idx))
+        batch_pos_feats = Variable(pos_feats.index_select(0, pos_cur_idx))  # 0 , 32
+        batch_neg_feats = Variable(neg_feats.index_select(0, neg_cur_idx)) # 0 , 1024
 
         # hard negative mining
-        if batch_neg_cand > batch_neg:
+        if batch_neg_cand > batch_neg: # 1024 > 96
             model.eval()
-            for start in range(0,batch_neg_cand,batch_test):
+            for start in range(0,batch_neg_cand,batch_test): # 1024 , 256
                 end = min(start+batch_test,batch_neg_cand)
                 score = model(batch_neg_feats[start:end], in_layer=in_layer)
                 if start==0:
@@ -101,16 +106,16 @@ def train(model, criterion, optimizer, pos_feats, neg_feats, maxiter, in_layer='
             _, top_idx = neg_cand_score.topk(batch_neg)
             batch_neg_feats = batch_neg_feats.index_select(0, Variable(top_idx))
             model.train()
-        
+
         # forward
         pos_score = model(batch_pos_feats, in_layer=in_layer)
         neg_score = model(batch_neg_feats, in_layer=in_layer)
-        
+
         # optimize
-        loss = criterion(pos_score, neg_score)
+        loss = criterion(pos_score, neg_score)  # BinaryLoss()
         model.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm(model.parameters(), opts['grad_clip'])
+        torch.nn.utils.clip_grad_norm(model.parameters(), opts['grad_clip']) #10
         optimizer.step()
 
         #print "Iter %d, Loss %.4f" % (iter, loss.data[0])
@@ -132,14 +137,14 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     model.set_learnable_params(opts['ft_layers'])
     
     # Init criterion and optimizer 
-    criterion = BinaryLoss()
-    init_optimizer = set_optimizer(model, opts['lr_init'])
-    update_optimizer = set_optimizer(model, opts['lr_update'])
+    criterion = BinaryLoss() # 표준
+    init_optimizer = set_optimizer(model, opts['lr_init']) #0.0001
+    update_optimizer = set_optimizer(model, opts['lr_update']) # 0.0002
 
     tic = time.time()
     # Load first image
     image = Image.open(img_list[0]).convert('RGB')
-    
+
     # Train bbox regressor
     bbreg_examples = gen_samples(SampleGenerator('uniform', image.size, 0.3, 1.5, 1.1),
                                  target_bbox, opts['n_bbreg'], opts['overlap_bbreg'], opts['scale_bbreg'])
@@ -147,7 +152,7 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     bbreg = BBRegressor(image.size)
     bbreg.train(bbreg_feats, bbreg_examples, target_bbox)
 
-    # Draw pos/neg samples
+    # Draw pos/neg samples@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     pos_examples = gen_samples(SampleGenerator('gaussian', image.size, 0.1, 1.2),
                                target_bbox, opts['n_pos_init'], opts['overlap_pos_init'])
 
@@ -158,12 +163,13 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
                                 target_bbox, opts['n_neg_init']//2, opts['overlap_neg_init'])])
     neg_examples = np.random.permutation(neg_examples)
 
-    # Extract pos/neg features
+    # Extract pos/neg features@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     pos_feats = forward_samples(model, image, pos_examples)
     neg_feats = forward_samples(model, image, neg_examples)
     feat_dim = pos_feats.size(-1)
 
     # Initial training
+    #@@@@@@@@@@@@@@@@@@@@@@@@
     train(model, criterion, init_optimizer, pos_feats, neg_feats, opts['maxiter_init'])
     
     # Init sample generators
