@@ -65,19 +65,27 @@ class SampleGenerator():
             samples[:,2:] *= self.aspect_f ** np.concatenate([ratio, -ratio],axis=1)
 
         # sample generation
+        # [:,:2] == total row && 0~1 col center_x, center_y
+        # [:,2:] == total row && 2~3 col w, h
         if self.type=='gaussian':
+            print ("gaussian : "+ sample[:,:2])
             samples[:,:2] += self.trans_f * np.mean(bb[2:]) * np.clip(0.5*np.random.randn(n,2),-1,1)
             samples[:,2:] *= self.scale_f ** np.clip(0.5*np.random.randn(n,1),-1,1)
+            print("after resize? : "+sample[:,:2])
+
 
         elif self.type=='uniform':
+            print ("uniform : " + sample[:, :2])
             samples[:,:2] += self.trans_f * np.mean(bb[2:]) * (np.random.rand(n,2)*2-1)
-            samples[:,2:] *= self.scale_f ** (np.random.rand(n,1)*2-1)
-        
+            samples[:,2:] *= sself.scale_f ** (np.random.rand(n,1)*2-1)
+            print("after resize? : " + sample[:, :2])
+
+
         elif self.type=='whole':
             m = int(2*np.sqrt(n))
             xy = np.dstack(np.meshgrid(np.linspace(0,1,m),np.linspace(0,1,m))).reshape(-1,2)
             xy = np.random.permutation(xy)[:n]
-            samples[:,:2] = bb[2:]/2 + xy * (self.img_size-bb[2:]/2-1)
+            samples[:,:2] = bb[2:]/2 + xy * (self.img_size-bb[2:]/2-1) # w,h change
             #samples[:,:2] = bb[2:]/2 + np.random.rand(n,2) * (self.img_size-bb[2:]/2-1)
             samples[:,2:] *= self.scale_f ** (np.random.rand(n,1)*2-1)
 
