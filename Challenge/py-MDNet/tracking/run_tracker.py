@@ -4,7 +4,7 @@ import sys
 import time
 import argparse
 import json
-from PIL import Image
+from PIL import Image, ImageFilter
 import matplotlib.pyplot as plt
 
 import torch
@@ -23,6 +23,10 @@ from gen_config import *
 np.random.seed(123)
 torch.manual_seed(456)
 torch.cuda.manual_seed(789)
+
+def image_blur(image):
+    return image.filter(ImageFilter.BLUR)
+
 
 # forward_samples(model, image, pos_examples)
 def forward_samples(model, image, samples, out_layer='conv3'):
@@ -144,7 +148,7 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     tic = time.time()
     # Load first image
     image = Image.open(img_list[0]).convert('RGB')
-    print("image shape : "+image.shape)
+    #print("image shape : "+image.shape)
 
     # Train bbox regressor
     bbreg_examples = gen_samples(SampleGenerator('uniform', image.size, 0.3, 1.5, 1.1),
@@ -156,8 +160,8 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     # Draw pos/neg samples@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     pos_examples = gen_samples(SampleGenerator('gaussian', image.size, 0.1, 1.2),
                                target_bbox, opts['n_pos_init'], opts['overlap_pos_init'])
-    print("pos_examples shape : "+pos_examples.shape)
-    print(pos_examples)
+    #print("pos_examples shape : ",pos_examples.shape)
+    #print(pos_examples) # [x, y , h, w]
 
     neg_examples = np.concatenate([
                     gen_samples(SampleGenerator('uniform', image.size, 1, 2, 1.1), 
@@ -167,7 +171,12 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     neg_examples = np.random.permutation(neg_examples)
 
     # Extract pos/neg features@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    blur_image=image_blur(image)
     pos_feats = forward_samples(model, image, pos_examples)
+    blur_pos_feats = forward_samples(model, blur_image, pos_examples)
+    pos_feats += blur_pos_feats
+
     neg_feats = forward_samples(model, image, neg_examples)
     feat_dim = pos_feats.size(-1)
 

@@ -47,6 +47,12 @@ class RegionExtractor():
         for i, sample in enumerate(self.samples[index]):
             regions[i] = crop_image(self.image, sample, self.crop_size, self.padding)
 
+
         regions = regions.transpose(0,3,1,2).astype('float32')
+
+        #print(regions.type)
         regions = regions - 128.
+        #print("after !!!!!!!!!!!")
+        #print(regions[0])
+
         return regions
