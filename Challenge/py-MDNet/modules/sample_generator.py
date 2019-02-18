@@ -68,17 +68,17 @@ class SampleGenerator():
         # [:,:2] == total row && 0~1 col center_x, center_y
         # [:,2:] == total row && 2~3 col w, h
         if self.type=='gaussian':
-            print ("gaussian : "+ sample[:,:2])
+            #print ("gaussian : "+ sample[:,:2])
             samples[:,:2] += self.trans_f * np.mean(bb[2:]) * np.clip(0.5*np.random.randn(n,2),-1,1)
             samples[:,2:] *= self.scale_f ** np.clip(0.5*np.random.randn(n,1),-1,1)
-            print("after resize? : "+sample[:,:2])
+            #print("after resize? : "+sample[:,:2])
 
 
         elif self.type=='uniform':
-            print ("uniform : " + sample[:, :2])
+            #print ("uniform : " + sample[:, :2])
             samples[:,:2] += self.trans_f * np.mean(bb[2:]) * (np.random.rand(n,2)*2-1)
-            samples[:,2:] *= sself.scale_f ** (np.random.rand(n,1)*2-1)
-            print("after resize? : " + sample[:, :2])
+            samples[:,2:] *= self.scale_f ** (np.random.rand(n,1)*2-1)
+            #print("after resize? : " + sample[:, :2])
 
 
         elif self.type=='whole':

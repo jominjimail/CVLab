@@ -137,13 +137,14 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     model.set_learnable_params(opts['ft_layers'])
     
     # Init criterion and optimizer 
-    criterion = BinaryLoss() # 표준
+    criterion = BinaryLoss() #
     init_optimizer = set_optimizer(model, opts['lr_init']) #0.0001
     update_optimizer = set_optimizer(model, opts['lr_update']) # 0.0002
 
     tic = time.time()
     # Load first image
     image = Image.open(img_list[0]).convert('RGB')
+    print("image shape : "+image.shape)
 
     # Train bbox regressor
     bbreg_examples = gen_samples(SampleGenerator('uniform', image.size, 0.3, 1.5, 1.1),
@@ -155,6 +156,8 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     # Draw pos/neg samples@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     pos_examples = gen_samples(SampleGenerator('gaussian', image.size, 0.1, 1.2),
                                target_bbox, opts['n_pos_init'], opts['overlap_pos_init'])
+    print("pos_examples shape : "+pos_examples.shape)
+    print(pos_examples)
 
     neg_examples = np.concatenate([
                     gen_samples(SampleGenerator('uniform', image.size, 1, 2, 1.1), 
