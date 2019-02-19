@@ -18,4 +18,3 @@
 - [results](https://www.robots.ox.ac.uk/~vgg/research/detect-track/)
 - [논문](https://www.robots.ox.ac.uk/~vgg/publications/2017/Feichtenhofer17/feichtenhofer17.pdf)
 - [중국어 블로그](https://blog.csdn.net/joshua_1988/article/details/78370035)
-- [번역좀..](https://blog.csdn.net/u012060535/article/details/82782395)
