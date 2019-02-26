@@ -1,0 +1,1 @@
+{"name": "OV", "desc": "Out-of-View - some portion of the target leaves the view.", "tracker": "MDNet", "evalType": "OPE", "seqs": [], "overlap": 0, "error": 0, "overlapScores": [], "errorNum": [], "successRateList": []}
