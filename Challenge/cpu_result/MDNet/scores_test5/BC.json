@@ -1,0 +1,1 @@
+{"name": "BC", "desc": "Background Clutters - the background near the target has the similar color or texture as the target.", "tracker": "MDNet", "evalType": "OPE", "seqs": [], "overlap": 0, "error": 0, "overlapScores": [], "errorNum": [], "successRateList": []}
