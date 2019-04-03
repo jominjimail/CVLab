@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0a70e492-cda8-4ef0-9241-f4aba4c72768" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tracking/data_prov.py" beforeDir="false" afterPath="$PROJECT_DIR$/tracking/data_prov.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracking/options.py" beforeDir="false" afterPath="$PROJECT_DIR$/tracking/options.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/py-MDNet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/py-MDNet.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tracking/run_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tracking/run_tracker.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,16 +14,16 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="vertical" split-proportion="0.69929075">
+    <splitter split-orientation="vertical" split-proportion="0.6818182">
       <split-first>
-        <splitter split-orientation="horizontal" split-proportion="0.47798237">
+        <splitter split-orientation="horizontal" split-proportion="0.5572458">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file pinned="false" current-in-tab="true">
+              <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/tracking/run_tracker.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="164">
-                      <caret line="163" column="5" selection-start-line="163" selection-start-column="5" selection-end-line="163" selection-end-column="5" />
+                    <state relative-caret-position="257">
+                      <caret line="138" column="23" lean-forward="true" selection-start-line="138" selection-start-column="23" selection-end-line="138" selection-end-column="23" />
                       <folding>
                         <element signature="e#0#18#0" expanded="true" />
                       </folding>
@@ -31,10 +32,22 @@
                 </entry>
               </file>
               <file pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/tracking/gen_config.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="420">
+                      <caret line="28" column="34" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
+                      <folding>
+                        <element signature="e#0#9#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/modules/model.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="2085">
-                      <caret line="147" column="19" selection-start-line="147" selection-start-column="15" selection-end-line="147" selection-end-column="19" />
+                    <state relative-caret-position="306">
+                      <caret line="43" selection-start-line="27" selection-end-line="43" />
                       <folding>
                         <element signature="e#0#9#0" expanded="true" />
                       </folding>
@@ -79,26 +92,11 @@
           </split-first>
           <split-second>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/tracking/run_tracker.py">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="525">
-                      <caret line="39" column="18" selection-start-line="39" selection-start-column="18" selection-end-line="39" selection-end-column="18" />
-                      <folding>
-                        <element signature="e#0#18#0" expanded="true" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/tracking/data_prov.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="249">
-                      <caret line="52" column="9" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
-                      <folding>
-                        <element signature="e#0#10#0" expanded="true" />
-                      </folding>
+                    <state relative-caret-position="90">
+                      <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
                     </state>
                   </provider>
                 </entry>
@@ -106,8 +104,8 @@
               <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/modules/sample_generator.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="104">
-                      <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+                    <state relative-caret-position="105">
+                      <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
                       <folding>
                         <element signature="e#0#18#0" expanded="true" />
                       </folding>
@@ -124,8 +122,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/tracking/options.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+                <state>
+                  <caret column="16" selection-start-column="5" selection-end-column="16" />
                 </state>
               </provider>
             </entry>
@@ -147,6 +145,8 @@
       <find>bb</find>
       <find>DISPLAY</find>
       <find>plt</find>
+      <find>run_mdnet</find>
+      <find>opts</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\jomin\Documents\GitHub\CVLab\Challenge\py-MDNet</dir>
@@ -167,8 +167,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="245" />
-    <option name="y" value="28" />
+    <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="813" />
   </component>
@@ -198,9 +197,12 @@
             <path>
               <item name="py-MDNet" type="b2602c69:ProjectViewProjectNode" />
               <item name="py-MDNet" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-              <item name="OTB" type="462c0819:PsiDirectoryNode" />
-              <item name="DragonBaby" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="py-MDNet" type="b2602c69:ProjectViewProjectNode" />
+              <item name="py-MDNet" type="462c0819:PsiDirectoryNode" />
+              <item name="tracking" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -239,7 +241,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="245" y="28" width="1440" height="813" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="813" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.119802676" />
@@ -253,7 +255,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32871014" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -262,15 +264,8 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/modules/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2085">
-          <caret line="147" column="19" selection-start-line="147" selection-start-column="15" selection-end-line="147" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/dataset/OTB/DragonBaby/img/0001.jpg">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -292,8 +287,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataset/OTB/DragonBaby/img/0001.jpg">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/modules/sample_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tracking/data_prov.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tracking/gen_config.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -305,16 +314,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/sample_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tracking/options.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -322,22 +321,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tracking/data_prov.py">
+    <entry file="file://$PROJECT_DIR$/tracking/run_tracker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="52" column="9" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
+        <state relative-caret-position="257">
+          <caret line="138" column="23" lean-forward="true" selection-start-line="138" selection-start-column="23" selection-end-line="138" selection-end-column="23" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tracking/run_tracker.py">
+    <entry file="file://$PROJECT_DIR$/modules/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="163" column="5" selection-start-line="163" selection-start-column="5" selection-end-line="163" selection-end-column="5" />
+        <state relative-caret-position="306">
+          <caret line="43" selection-start-line="27" selection-end-line="43" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

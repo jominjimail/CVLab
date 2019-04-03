@@ -175,6 +175,7 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
     blur_image=image_blur(image)
     pos_feats = forward_samples(model, image, pos_examples)
     blur_pos_feats = forward_samples(model, blur_image, pos_examples)
+
     pos_feats += blur_pos_feats
 
     neg_feats = forward_samples(model, image, neg_examples)
@@ -228,6 +229,7 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
         tic = time.time()
         # Load image
         image = Image.open(img_list[i]).convert('RGB')
+        blur_image = image_blur(image)
 
         # Estimate target bbox
         samples = gen_samples(sample_generator, target_bbox, opts['n_samples'])
@@ -274,8 +276,13 @@ def run_mdnet(img_list, init_bbox, gt=None, savefig_dir='', display=False):
                                        opts['overlap_neg_update'])
 
             # Extract pos/neg features
+            blur_image = image_blur(image)
             pos_feats = forward_samples(model, image, pos_examples)
+            blur_pos_feats = forward_samples(model, blur_image, pos_examples)
+            pos_feats += blur_pos_feats
+
             neg_feats = forward_samples(model, image, neg_examples)
+
             pos_feats_all.append(pos_feats)
             neg_feats_all.append(neg_feats)
             if len(pos_feats_all) > opts['n_frames_long']:
@@ -336,10 +343,10 @@ if __name__ == "__main__":
     parser.add_argument('-j', '--json', default='', help='input json')
     parser.add_argument('-f', '--savefig', action='store_true')
     parser.add_argument('-d', '--display', action='store_true')
-    
+
     args = parser.parse_args()
     assert(args.seq != '' or args.json != '')
-    
+
     # Generate sequence config
     img_list, init_bbox, gt, savefig_dir, display, result_path = gen_config(args)
 
