@@ -25,6 +25,7 @@ for i in range(10):
 messages = np.array([utl.preprocess_ST_message(message) for message in messages])
 
 full_lexicon = " ".join(messages).split()
+
 vocab_to_int, int_to_vocab = utl.create_lookup_tables(full_lexicon)
 
 messages_lens = Counter([len(x) for x in messages])
