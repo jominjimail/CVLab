@@ -1,10 +1,12 @@
 import tensorflow as tf
 import numpy as np
-import utils as utl 
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("./mnist/data/", one_hot=True)
  
+index_in_epoch = 0
+epochs_completed = 0
+num_examples = 10
 
 learning_rate = 0.001
 total_epoch = 30
@@ -35,6 +37,39 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
  
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
  
+
+def next_batch(batch_size,shuffle=True):
+    start = index_in_epoch
+    # Shuffle for the first epoch
+    if epochs_completed == 0 and start == 0 and shuffle:
+      perm0 = numpy.arange(num_examples)
+      numpy.random.shuffle(perm0)
+      trains = trains[perm0]
+    # Go to the next epoch
+    if start + batch_size > num_examples:
+      # Finished epoch
+      epochs_completed += 1
+      # Get the rest examples in this epoch
+      rest_num_examples = num_examples - start
+      rest_trains = trins[start:num_examples]
+      # Shuffle the data
+      if shuffle:
+        perm = numpy.arange(num_examples)
+        numpy.random.shuffle(perm)
+        trains = trains[perm]
+      # Start next epoch
+      start = 0
+      index_in_epoch = batch_size - rest_num_examples
+      end = index_in_epoch
+      new_trains= trains[start:end]
+      return numpy.concatenate(
+          (rest_trains,new_trains), axis=0)
+    else:
+      index_in_epoch += batch_size
+      end = index_in_epoch
+      return trains[start:end]
+
+
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
  
