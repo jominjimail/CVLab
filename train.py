@@ -25,16 +25,17 @@ gesture_names = ['up', 'down', 'right', 'left', 'pew']
 # up:data[0]~[9], down:data[10]~[19], left:data[20]~[29], right[30]~[39], pew[40]~[49]
 trains_tmp = []
 trains = []
-
+tests_tmp = []
+tests = []
 #for step
 max_num_frame = 0
 
 # data load + label.
-def load_data():
+def load_data(data_directory):
     global max_num_frame
     # number of gesture (5)
     for gesture_i in range(0, len(gesture_names)):
-        data_dir = os.path.join('./data', gesture_names[gesture_i])
+        data_dir = os.path.join(data_directory, gesture_names[gesture_i])
         data_list = os.listdir(data_dir)
         data_list.sort()
         gesture_data_list = [os.path.join(data_dir,x) for x in data_list]
@@ -70,17 +71,27 @@ def load_data():
                 # data[i] = tuple(x_i, y_i)
                 # x_i : a gesture data in array format with size (num_frame x 18)
                 # y_i : label data indicates actual gesture name
-
-                trains_tmp.append(tuple((arr,label_onehot)))
+                if data_directory == './data':
+                    trains_tmp.append(tuple((arr,label_onehot)))
+                elif data_directory == './test_data':
+                    tests_tmp.append(tuple((arr, label_onehot)))
             f.close()
 
 def zero_padding():
     global trains_tmp
     global trains
+    global tests_tmp
+    global tests
     for i in range(num_examples):
         num_frame = int(len(trains_tmp[i][0])/18)
         zero_arr = np.zeros((max_num_frame-num_frame)*18, dtype=float)
-        trains.append(tuple((np.concatenate((trains_tmp[i][0], zero_arr)),  trains_tmp[i][1])))
+        trains.append(tuple((np.concatenate((trains_tmp[i][0], zero_arr)), trains_tmp[i][1])))
+
+    for i in range(len(tests_tmp)):
+        num_frame = int(len(tests_tmp[i][0])/18)
+        zero_arr = np.zeros((max_num_frame-num_frame)*18, dtype=float)
+        tests.append(tuple((np.concatenate((tests_tmp[i][0], zero_arr)),  tests_tmp[i][1])))
+
 
 def next_batch(batch_size,shuffle=True):
     global index_in_epoch
@@ -144,7 +155,8 @@ def next_batch(batch_size,shuffle=True):
         return batchx, batchy
 
 
-load_data()
+load_data('./data')
+load_data('./test_data')
 zero_padding()
 n_step = max_num_frame
 
@@ -177,10 +189,9 @@ with tf.Session() as sess:
         total_cost = 0
  
         for i in range(total_batch):
-            output_trains = next_batch(batch_size)
             batch_xs, batch_ys = next_batch(batch_size)
-            batch_xs = batch_xs.reshape((batch_size, n_step, n_input))
- 
+            batch_xs = batch_xs.reshape((batch_size, n_step, n_input)) 
+
             _, cost_val = sess.run([optimizer, cost],
                 feed_dict={X: batch_xs, Y: batch_ys})
             total_cost += cost_val
@@ -192,6 +203,22 @@ with tf.Session() as sess:
     is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
     accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
  
+
+    test_batch_size =len(tests) 
+    test_batchx = []
+    test_batchy = []
+    for i in range(0,test_batch_size):
+        test_batchx.append(tests[i][0])
+        test_batchy.append(tests[i][1])
+
+    test_batchx = np.array(test_batchx)
+    test_ys= np.array(test_batchy)
+    test_xs = test_batchx.reshape((test_batch_size, n_step, n_input))
+
+ 
+    print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
+
+
 """
     test_batch_size = len(mnist.test.images)
     test_xs = mnist.test.images.reshape(test_batch_size, n_step, n_input)
