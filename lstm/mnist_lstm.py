@@ -44,9 +44,10 @@ with tf.Session() as sess:
         total_cost = 0
  
         for i in range(total_batch):
-            batch_xs, batch_ys = next_batch(batch_size)
+            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             batch_xs = batch_xs.reshape((batch_size, n_step, n_input))
  
+            
             _, cost_val = sess.run([optimizer, cost],
                 feed_dict={X: batch_xs, Y: batch_ys})
             total_cost += cost_val

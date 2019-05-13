@@ -32,8 +32,7 @@ outputs = outputs[-1]
 model = tf.matmul(outputs, W) + b
  
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
-    logits=model, labels=Y
-))
+    logits=model, labels=Y))
  
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
  
@@ -59,14 +58,12 @@ def next_batch(batch_size,shuffle=True):
         trains = trains[perm]
       # Start next epoch
       start = 0
-      index_in_epoch = batch_size - rest_num_examples
-      end = index_in_epoch
+      index_in_epoch = batch_size - rest_num_examples end = index_in_epoch
       new_trains= trains[start:end]
       return numpy.concatenate(
           (rest_trains,new_trains), axis=0)
     else:
-      index_in_epoch += batch_size
-      end = index_in_epoch
+      index_in_epoch += batch_size end = index_in_epoch
       return trains[start:end]
 
 
@@ -93,8 +90,9 @@ with tf.Session() as sess:
     is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
     accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
  
-    test_batch_size = len(mnist.test.images)
-    test_xs = mnist.test.images.reshape(test_batch_size, n_step, n_input)
+    validation = []
+    test_batch_size = 5
+    test_xs = .reshape(test_batch_size, n_step, n_input)
     test_ys = mnist.test.labels
  
     print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
