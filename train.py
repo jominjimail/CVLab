@@ -131,8 +131,8 @@ def next_batch(batch_size,shuffle=True):
         new_trains= trains[start:end]
 
         for i in range(start, end):
-            batchx.append(trains[i][0])
-            batchy.append(trains[i][1])
+            batchx.append(new_trains[i][0])
+            batchy.append(new_trains[i][1])
 
         batchx = np.array(batchx)
         batchy = np.array(batchy)
@@ -184,7 +184,8 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
  
     total_batch = int(num_examples / batch_size)
- 
+    if (num_examples%batch_size) != 0:
+        total_batch = total_batch+1 
     for epoch in range(total_epoch):
         total_cost = 0
  
@@ -217,12 +218,3 @@ with tf.Session() as sess:
 
  
     print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
-
-
-"""
-    test_batch_size = len(mnist.test.images)
-    test_xs = mnist.test.images.reshape(test_batch_size, n_step, n_input)
-    test_ys = mnist.test.labels
- 
-    print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
-"""
