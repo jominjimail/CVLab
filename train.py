@@ -4,10 +4,9 @@ import os
 import csv
 import random
 
-num_examples = 50
 learning_rate = 0.001
 total_epoch = 100
-batch_size = 16
+batch_size = 32
 
 # next_batch
 epochs_completed = 0
@@ -22,7 +21,6 @@ np.set_printoptions(formatter={'float_kind':float_formatter})
 
 gesture_names = ['up', 'down', 'right', 'left', 'pew']
 
-# up:data[0]~[9], down:data[10]~[19], left:data[20]~[29], right[30]~[39], pew[40]~[49]
 trains_tmp = []
 trains = []
 tests_tmp = []
@@ -82,7 +80,7 @@ def zero_padding():
     global trains
     global tests_tmp
     global tests
-    for i in range(num_examples):
+    for i in range(len(trains_tmp)):
         num_frame = int(len(trains_tmp[i][0])/18)
         zero_arr = np.zeros((max_num_frame-num_frame)*18, dtype=float)
         trains.append(tuple((np.concatenate((trains_tmp[i][0], zero_arr)), trains_tmp[i][1])))
@@ -96,15 +94,12 @@ def zero_padding():
 def next_batch(batch_size,shuffle=True):
     global index_in_epoch
     global epochs_completed
-    global num_examples
     global trains
     start = index_in_epoch
+    num_examples = len(trains)
     # Shuffle for the first epoch
 
     if epochs_completed == 0 and start == 0 and shuffle:
-        #perm0 = np.arange(num_examples)
-        #np.random.shuffle(perm0)
-        #trains = trains[perm0]
         random.shuffle(trains)
     # Go to the next epoch
     if start + batch_size > num_examples:
@@ -166,7 +161,8 @@ Y = tf.placeholder(tf.float32, [None, n_class])
 W = tf.Variable(tf.random_normal([n_hidden, n_class]))
 b = tf.Variable(tf.random_normal([n_class]))
  
-cell = tf.nn.rnn_cell.BasicRNNCell(n_hidden)
+#cell = tf.nn.rnn_cell.BasicRNNCell(n_hidden)
+cell = tf.nn.rnn_cell.BasicLSTMCell(n_hidden)
 outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
  
 outputs = tf.transpose(outputs, [1, 0, 2])
@@ -182,9 +178,9 @@ optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
  
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
- 
-    total_batch = int(num_examples / batch_size)
-    if (num_examples%batch_size) != 0:
+
+    total_batch = int(len(trains) / batch_size)
+    if (len(trains)%batch_size) != 0:
         total_batch = total_batch+1 
     for epoch in range(total_epoch):
         total_cost = 0
