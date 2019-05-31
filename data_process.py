@@ -64,3 +64,5 @@ def zero_padding():
 
 load_data()
 zero_padding()
+
+print(trains[11])

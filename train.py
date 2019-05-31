@@ -28,6 +28,8 @@ tests = []
 #for step
 max_num_frame = 0
 
+checkpoint_dir = './checkpoint'
+
 # data load + label.
 def load_data(data_directory):
     global max_num_frame
@@ -149,6 +151,45 @@ def next_batch(batch_size,shuffle=True):
         #return trains[start:end][0], trains[start:end][1]
         return batchx, batchy
 
+def save(checkpoint_dir, step):
+    model_name = "LSTM.model"
+    model_dir = "lstm"
+    checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
+
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+
+    saver.save(sess, os.path.join(checkpoint_dir, model_name), global_step = step)
+
+def load(checkpoint_dir):
+    print ("Reading checkpoints...")
+    model_dir = "lstm"
+    checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
+
+    ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
+    if ckpt and ckpt.model_checkpoint_path:
+        ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
+        saver.restore(sess, os.path.join(checkpoint_dir, ckpt_name))
+        return True
+    else:
+        return False
+
+def test(sess):
+    is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
+    accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
+
+    test_batch_size =len(tests) 
+    test_batchx = []
+    test_batchy = []
+    for i in range(0,test_batch_size):
+        test_batchx.append(tests[i][0])
+        test_batchy.append(tests[i][1])
+
+    test_batchx = np.array(test_batchx)
+    test_ys= np.array(test_batchy)
+    test_xs = test_batchx.reshape((test_batch_size, n_step, n_input))
+
+    print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
 
 load_data('./data')
 load_data('./test_data')
@@ -174,14 +215,23 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
     logits=model, labels=Y
 ))
  
+saver = tf.train.Saver()
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
  
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
+    if load(checkpoint_dir):
+        print("Laod success!")
+        test(sess)
 
+    else:
+        print("Load failed..")
+
+    print("training..")
     total_batch = int(len(trains) / batch_size)
     if (len(trains)%batch_size) != 0:
-        total_batch = total_batch+1 
+        total_batch = total_batch+1
+
     for epoch in range(total_epoch):
         total_cost = 0
  
@@ -195,22 +245,8 @@ with tf.Session() as sess:
  
         print('Epoch:', '%04d' % (epoch + 1),
             'Avg. cost: {:.4}'.format(total_cost / total_batch))
- 
-    print("fin") 
-    is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
-    accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
- 
 
-    test_batch_size =len(tests) 
-    test_batchx = []
-    test_batchy = []
-    for i in range(0,test_batch_size):
-        test_batchx.append(tests[i][0])
-        test_batchy.append(tests[i][1])
+    save(checkpoint_dir, total_epoch)
 
-    test_batchx = np.array(test_batchx)
-    test_ys= np.array(test_batchy)
-    test_xs = test_batchx.reshape((test_batch_size, n_step, n_input))
-
- 
-    print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
+    print("testing..")
+    test(sess)
