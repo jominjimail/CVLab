@@ -1,14 +1,14 @@
-### Hand Gesture Recognition using Leap Motion Controller with LSTM
+# Hand Gesture Recognition using Leap Motion Controller with LSTM
 
-##### 2016025432 박찬현, 2016025987 조민지 with CVLAB, Hanyang Univ.
+#### 2016025432 박찬현, 2016025987 조민지 with CVLAB, Hanyang Univ.
 
-#### Abstract
+## Abstract
 
 Leap motion controller(이하 leap motion)는 손의 정보를 제공한다. 우리는 leap motion 의 API를 통해 얻은 데이터에 LSTM을 적용하여  dynamic gesture를 인식한다.
 
 
 
-#### Requirement
+## Requirement
 
 tensorflow version : 1.13.1
 
@@ -18,13 +18,13 @@ leap motion sdk : 2.3.1
 
 
 
-#### Run
+## Run
 
 $python train.py
 
 
 
-#### Folder
+## Folder
 
 LeapTrainer.js - master 를 수정하여 데이터를 .csv로 저장
 
