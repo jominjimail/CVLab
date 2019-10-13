@@ -53,7 +53,13 @@ $python test.py
 
 ## Result
 
-gif upload
+#### up&down
+
+![](./images/up_down.gif)
+
+#### left&right
+
+![](./images/left_right.gif)
 
 ## Folder
 
