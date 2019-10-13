@@ -261,5 +261,15 @@ with tf.Session() as sess:
 
         save(checkpoint_dir, total_epoch)
 
+<<<<<<< HEAD
         print("testing..")
         test(sess)
+=======
+    print ('b is ',sess.run(b))
+    print('W is',sess.run(W))
+
+
+
+    print("testing..")
+    test(sess)
+>>>>>>> c7e6f005f777da1595f9eb93b0519fbf8980ac52
