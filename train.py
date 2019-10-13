@@ -29,6 +29,11 @@ tests = []
 max_num_frame = 0
 
 checkpoint_dir = './checkpoint'
+train_data = './data'
+test_data = './test_data'
+
+tf.reset_default_graph()
+
 
 # data load + label.
 def load_data(data_directory):
@@ -71,9 +76,9 @@ def load_data(data_directory):
                 # data[i] = tuple(x_i, y_i)
                 # x_i : a gesture data in array format with size (num_frame x 18)
                 # y_i : label data indicates actual gesture name
-                if data_directory == './data':
+                if data_directory == train_data:
                     trains_tmp.append(tuple((arr,label_onehot)))
-                elif data_directory == './test_data':
+                elif data_directory == test_data:
                     tests_tmp.append(tuple((arr, label_onehot)))
             f.close()
 
@@ -152,19 +157,18 @@ def next_batch(batch_size,shuffle=True):
         return batchx, batchy
 
 def save(checkpoint_dir, step):
-    model_name = "LSTM.model"
-    model_dir = "lstm"
-    checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
+    model_name = "model.ckpt"
 
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
 
     saver.save(sess, os.path.join(checkpoint_dir, model_name), global_step = step)
 
+
 def load(checkpoint_dir):
     print ("Reading checkpoints...")
-    model_dir = "lstm"
-    checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
+
+    model_name = "model.ckpt"
 
     ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
     if ckpt and ckpt.model_checkpoint_path:
@@ -173,6 +177,7 @@ def load(checkpoint_dir):
         return True
     else:
         return False
+
 
 def test(sess):
     is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
@@ -189,15 +194,22 @@ def test(sess):
     test_ys= np.array(test_batchy)
     test_xs = test_batchx.reshape((test_batch_size, n_step, n_input))
 
+    predict = tf.argmax(model, 1)
+    print(sess.run(predict, feed_dict = {X: test_xs, Y:test_ys}))
+
     print('accuracy : ', sess.run(accuracy, feed_dict={X: test_xs, Y: test_ys}))
 
-load_data('./data')
-load_data('./test_data')
+
+def get_max_frame():
+	return max_num_frame
+
+load_data(train_data)
+load_data(test_data)
 zero_padding()
 n_step = max_num_frame
 
-X = tf.placeholder(tf.float32, [None, n_step, n_input])
-Y = tf.placeholder(tf.float32, [None, n_class])
+X = tf.placeholder(tf.float32, [None, n_step, n_input], name="input")
+Y = tf.placeholder(tf.float32, [None, n_class], name="output")
 
 W = tf.Variable(tf.random_normal([n_hidden, n_class]))
 b = tf.Variable(tf.random_normal([n_class]))
@@ -210,6 +222,7 @@ outputs = tf.transpose(outputs, [1, 0, 2])
 outputs = outputs[-1]
  
 model = tf.matmul(outputs, W) + b
+model = tf.identity(model, "model")
  
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
     logits=model, labels=Y
@@ -217,7 +230,7 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
  
 saver = tf.train.Saver()
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
- 
+
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     if load(checkpoint_dir):
@@ -227,26 +240,26 @@ with tf.Session() as sess:
     else:
         print("Load failed..")
 
-    print("training..")
-    total_batch = int(len(trains) / batch_size)
-    if (len(trains)%batch_size) != 0:
-        total_batch = total_batch+1
+        print("training..")
+        total_batch = int(len(trains) / batch_size)
+        if (len(trains)%batch_size) != 0:
+            total_batch = total_batch+1
 
-    for epoch in range(total_epoch):
-        total_cost = 0
- 
-        for i in range(total_batch):
-            batch_xs, batch_ys = next_batch(batch_size)
-            batch_xs = batch_xs.reshape((batch_size, n_step, n_input)) 
+        for epoch in range(total_epoch):
+            total_cost = 0
+     
+            for i in range(total_batch):
+                batch_xs, batch_ys = next_batch(batch_size)
+                batch_xs = batch_xs.reshape((batch_size, n_step, n_input)) 
 
-            _, cost_val = sess.run([optimizer, cost],
-                feed_dict={X: batch_xs, Y: batch_ys})
-            total_cost += cost_val
- 
-        print('Epoch:', '%04d' % (epoch + 1),
-            'Avg. cost: {:.4}'.format(total_cost / total_batch))
+                _, cost_val = sess.run([optimizer, cost],
+                    feed_dict={X: batch_xs, Y: batch_ys})
+                total_cost += cost_val
+     
+            print('Epoch:', '%04d' % (epoch + 1),
+                'Avg. cost: {:.4}'.format(total_cost / total_batch))
 
-    save(checkpoint_dir, total_epoch)
+        save(checkpoint_dir, total_epoch)
 
-    print("testing..")
-    test(sess)
+        print("testing..")
+        test(sess)
