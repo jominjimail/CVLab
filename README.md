@@ -10,31 +10,81 @@ Leap motion controller(이하 leap motion)는 손의 정보를 제공한다. 우
 
 ## Requirement
 
-tensorflow version : 1.13.1
+python 2.7
+
+tensorflow 1.10.0 (for python 2.7)
 
 numpy
 
-leap motion sdk : 2.3.1
+keyboard
+
+leapmotion sdk 3.2.1 (Windows)
+
+
+
+## Install
+
+```shell
+$pip install python2.7
+$pip install tensorflow-1.10.0-cp27-cp27m-win_amd64.whl
+$pip install numpy
+$pip install keyboard
+```
+
+leap motion sdk : https://www.leapmotion.com/
 
 
 
 ## Run
 
+#### for train
+
+```shell
 $python train.py
+```
+
+#### for test
+
+```shell
+$python test.py
+```
 
 
+
+## Result
+
+gif upload
 
 ## Folder
 
-LeapTrainer.js - master 를 수정하여 데이터를 .csv로 저장
+```
+.
+├── checkpoint // train.py를 실행한 모델이 저장됨
+|   ├── checkpoint 
+|   ├── model.ckpt-100.data-00000-of-00001
+|   ├── model.ckpt-100.index
+|   └── model.ckpt-100.meta
+├── data* // train 데이터
+|   ├── down
+|   ├── left
+|   ├── pew
+|   ├── right
+|   └── up
+├── lib // leap motion Windows SDK
+├── minji_test // validation 데이터
+|   ├── down
+|   ├── left
+|   ├── pew
+|   ├── right
+|   └── up
+├── test_data // validation 데이터
+├── keyboard_callback.py // keyboard API
+├── tensorflow-1.10.0-cp27-cp27m-win_amd64.whl
+├── test.py
+└── train.py
+```
 
-data* : train을 위해 저장된 데이터들
 
-test_data : validation을 위해 저장된 데이터들
-
-lasm* : 참고한 lstm 코드
-
-data_process.py : 데이터 전처리를 위한 코드
 
 
 
