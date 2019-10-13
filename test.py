@@ -25,9 +25,6 @@ checkpoint_dir = './checkpoint'
 
 
 class SampleListener(Leap.Listener):
-    finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
-    bone_names = ['Metacarpal', 'Proximal', 'Intermediate', 'Distal']
-
     recording = False
     frameCount=0
     gesture = []
